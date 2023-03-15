@@ -3,9 +3,6 @@ function log(msg) {
   log.textContent = `MSG2: ${msg}2 \n${log.textContent}`
 }
 
-
-uiEvent.
-
 window.addEventListener("load", (e) => {
   console.log("window.load");
 });
@@ -38,7 +35,7 @@ const anim = () => {
   ctx.save();
   ctx.translate(width/2, height/2)
   ctx.rotate((sec * Math.PI) / 30);
-  ctx.fillText("ANIM", 0, 0, width * 0.8);
+  ctx.fillText("TEST02", 0, 0, width * 0.8);
   ctx.restore();
 
 
