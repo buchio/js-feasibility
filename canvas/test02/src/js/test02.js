@@ -1,10 +1,12 @@
-function log(msg) {
+// import toggleFullscreen from "fullscreen.js"
+
+export const log = (msg) => {
   const log = document.getElementById("log");
-  log.textContent = `MSG2: ${msg}2 \n${log.textContent}`
+  log.textContent = `LOG: ${msg}2 \n${log.textContent}`
 }
 
 window.addEventListener("load", (e) => {
-  console.log("window.load");
+  console.log("window.load", e);
 });
 
 
@@ -26,7 +28,7 @@ const anim = () => {
   const date = new Date();
   const sec = date.getSeconds() + date.getMilliseconds() / 1000;
 
-  fontSize = height / 2;
+  const fontSize = height / 2;
   ctx.font = `bold ${fontSize}px arial`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -37,7 +39,6 @@ const anim = () => {
   ctx.rotate((sec * Math.PI) / 30);
   ctx.fillText("TEST02", 0, 0, width * 0.8);
   ctx.restore();
-
 
   window.requestAnimationFrame(anim);
 };

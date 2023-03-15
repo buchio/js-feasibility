@@ -38,7 +38,7 @@ const exitFullscreen = () => {
   }
 };
 
-const toggleFullscreen = () => {
+export const toggleFullscreen = () => {
   if (checkFullscreen()) {
     exitFullscreen();
   } else {
