@@ -1,29 +1,41 @@
-// import toggleFullscreen from "fullscreen.js"
+const utils = require("./utils")
+const fscreen = require("fscreen");
+const interactjs = require("interactjs");
 
-export const log = (msg) => {
+const log = (msg) => {
   const log = document.getElementById("log");
   log.textContent = `LOG: ${msg}2 \n${log.textContent}`
 }
+
+interactjs('#canvas').draggable({
+  listeners: {
+    move (event) {
+      console.log('LOG', event.pageX, event.pageY);
+      log(`X:${event.pageX}, Y:${event.pageY}`);
+    },
+  },
+})
 
 window.addEventListener("load", (e) => {
   console.log("window.load", e);
 });
 
 
-let currentDate = 0;
+let currentDate = -1;
 const anim = () => {
 
   const now = Date.now();
+  console.log(currentDate);
   if (now - currentDate < 100) {
+    window.requestAnimationFrame(anim);
     return;
   }
-
-  const canvas = document.getElementById("canvas");
-  const width = canvas.offsetWidth;
-  const height = canvas.offsetHeight;
-  if (canvas.width != width) canvas.width = width;
-  if (canvas.height != height) canvas.height = height;
+  currentDate = now;
   
+  const canvas = document.getElementById("canvas");
+  let [width, height] = utils.adjustCanvas(canvas);
+  console.log(width, height);
+
   const ctx = canvas.getContext("2d");
   const date = new Date();
   const sec = date.getSeconds() + date.getMilliseconds() / 1000;
