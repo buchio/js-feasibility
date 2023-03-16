@@ -16,20 +16,30 @@ const vinylBuffer     = require("vinyl-buffer");
 const jsSources = "src/js/*.js";
 const cssSources = "src/css/*.css";
 
-const clean = () => {
-  return gulp.src("dist/", {allowEmpty:true})
+const cleanRelTask = () => {
+  return gulp.src("dist/release", {allowEmpty:true})
     .pipe(gulpClean());
 };
+
+const cleanDevTask = () => {
+  return gulp.src("dist/dev", {allowEmpty:true})
+    .pipe(gulpClean());
+};
+
+
+const jsLintTask = () => {
+  return gulp.src("src/js/*.js")
+    .pipe(gulpEslint({useEslintrc: true}))
+    .pipe(gulpEslint.format())
+    .pipe(gulpEslint.failAfterError())
+    .pipe(gulpStripImportExport());
+}
 
 const jsBase = ( release ) => {
   let js = browserify("src/js/test02.js")
       .bundle()
       .pipe(vinylSourceStream("test02.js"))
       .pipe(vinylBuffer())
-      //.pipe(gulpEslint({useEslintrc: true}))
-      //.pipe(gulpEslint.format())
-      //.pipe(gulpEslint.failAfterError())
-      //.pipe(gulpStripImportExport())
       //.pipe(gulpBabel({presets: ["@babel/env"]}))
   if ( release ) {
     js = js.pipe(gulpUglify())
@@ -42,58 +52,69 @@ const jsBase = ( release ) => {
   return js;
 }
 
-const jsRelease = () => {
+const jsRelTask = () => {
   return jsBase(true);
 };
 
-const jsDev = () => {
+const jsDevTask = () => {
   return jsBase(false);
 };
 
-const cssRelease = () => {
+const cssLintTask = () => {
   return gulp.src("src/css/*.css")
     .pipe(gulpCSSlint(".csslintrc.json"))
+}
+
+const cssRelTask = () => {
+  return gulp.src("src/css/*.css")
     .pipe(gulpConcat("test02.css"))
     .pipe(gulpCleanCSS())
     .pipe(gulpRename({extname: ".min.css"}))
     .pipe(gulp.dest("dist/release/"));
 };
 
-const cssDev = () => {
+const cssDevTask = () => {
   return gulp.src("src/css/*.css")
-    .pipe(gulpCSSlint(".csslintrc.json"))
     .pipe(gulpConcat("test02.css"))
     .pipe(gulpRename({extname: ".css"}))
     .pipe(gulp.dest("dist/dev/"));
 };
 
-const htmlRelease = () => {
+const htmlRelTask = () => {
   return gulp.src("src/html/release/index.html")
     .pipe(gulp.dest("dist/release/"));
 };
 
-const htmlDev = () => {
+const htmlDevTask = () => {
   return gulp.src("src/html/dev/index.html")
     .pipe(gulp.dest("dist/dev/"));
 };
 
+const relTasks = gulp.series(
+  cleanRelTask,
+  gulp.parallel(
+    jsRelTask,
+    cssRelTask,
+    htmlRelTask,
+  ));
+
+const devTasks = gulp.series(
+  cleanDevTask,
+  gulp.parallel(
+    jsDevTask,
+    cssDevTask,
+    htmlDevTask,
+  ));
+
+const lintTasks = gulp.parallel(
+  jsLintTask,
+  cssLintTask);
+
+exports.lint = lintTasks;
+exports.release = relTasks;
+exports.dev = devTasks;
+
 exports.default = gulp.series(
-  clean,
-  gulp.parallel(
-    jsRelease,
-    cssRelease,
-    htmlRelease,
-    jsDev,
-    cssDev,
-    htmlDev,
-  ));
-
-exports.dev = gulp.series(
-  clean,
-  gulp.parallel(
-    jsDev,
-    cssDev,
-    htmlDev,
-  ));
-
-
+  lintTasks,
+  gulp.parallel(devTasks,
+                relTasks));

@@ -13,16 +13,29 @@ ghtml,body {
     width: 100%;
     height: 100%;
 }
+#status {
+    z-index: 255;
+    overflow: scroll;
+    background-color: magenta;
+    display: block;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    right: 55%;
+    bottom: 75%;
+    width: 90%;
+    height: 20%;
+}
 #log {
     z-index: 255;
     overflow: scroll;
     background-color: cyan;
     display: block;
     position: absolute;
-    top: 0;
-    left: 0%;
-    right: 0;
-    bottom: 0;
-    width: 100%;
+    top: 5%;
+    left: 55%;
+    right: 5%;
+    bottom: 75%;
+    width: 90%;
     height: 20%;
 }

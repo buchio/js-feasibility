@@ -31,7 +31,6 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "fscreen": "^1.2.0",
-    "interactjs": "^1.10.17"
+    "fscreen": "^1.2.0"
   }
 }
