@@ -19,30 +19,32 @@ const clean = () => {
     .pipe(gulpClean());
 };
 
+
+const jsBase = ( release ) => {
+  let js = gulp.src('src/js/*.js')
+        .pipe(gulpEslint({useEslintrc: true}))
+        .pipe(gulpEslint.format())
+        .pipe(gulpEslint.failAfterError())
+        .pipe(gulpConcat('test02.js'))
+        .pipe(gulpStripImportExport())
+        .pipe(gulpBabel({presets: ['@babel/env']}))
+  if ( release ) {
+    js = js.pipe(gulpUglify())
+      .pipe(gulpRename({extname: '.min.js'}))
+      .pipe(gulp.dest('dist/release/'));
+  } else {
+    js = js.pipe(gulpRename({extname: '.js'}))
+      .pipe(gulp.dest('dist/dev/'));
+  }
+  return js;
+}
+
 const jsRelease = () => {
-  return gulp.src('src/js/*.js')
-    .pipe(gulpEslint({useEslintrc: true}))
-    .pipe(gulpEslint.format())
-    .pipe(gulpEslint.failAfterError())
-    .pipe(gulpConcat('test02.js'))
-    .pipe(gulpStripImportExport())
-    .pipe(gulpBabel({presets: ['@babel/env']}))
-    .pipe(gulpUglify())
-    .pipe(gulpRename({extname: '.min.js'}))
-    .pipe(gulp.dest('dist/release/'));
+  return jsBase(true);
 };
 
 const jsDev = () => {
-  return gulp.src('src/js/*.js')
-    .pipe(gulpEslint({useEslintrc: true}))
-    .pipe(gulpEslint.format())
-    .pipe(gulpEslint.failAfterError())
-    .pipe(gulpConcat('test02.js'))
-    .pipe(gulpStripImportExport())
-    .pipe(gulpBabel({presets: ['@babel/env']}))
-    .pipe(gulpRename({extname: '.js'}))
-    .pipe(gulp.dest('dist/dev/'));
-  
+  return jsBase(false);
 };
 
 const cssRelease = () => {
