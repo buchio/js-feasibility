@@ -2,17 +2,64 @@ const utils = require("./utils")
 
 const log = (msg) => {
   const log = document.getElementById("log");
-  log.textContent = `LOG: ${msg}2 \n${log.textContent}`
+  log.textContent = `LOG: ${msg}\n${log.textContent}`
 }
 
 window.addEventListener("load", (e) => {
   console.log("window.load", e);
   const canvas = document.getElementById("canvas");
-  canvas.addEventListener("click", () => {
-    log('CLICK');
-    console.log("CLICK");
+  [
+    "click",
+    "dblclick",
+    "pointercancel",
+    "pointerdown",
+    "pointerenter",
+    "pointerleave",
+    "pointermove",
+    "pointerout",
+    "pointerover",
+    "pointerup",
+  ].forEach((name) => {
+    canvas.addEventListener(name, (e) => {
+      e.preventDefault();
+      log(name);
+      console.log(`${name} ${e.type}`, e)
+    });
+  });
+  canvas.addEventListener("dblclick", () => {
     utils.toggleFullscreen(canvas);
   });
+
+//   canvas.addEventListener("touchstart", (e) => {
+//     e.preventDefault();
+//     console.log(e.changedTouches);
+//     for(let i = 0; i < e.changedTouches.length; i++ ) {
+//       const identifier = e.changedTouches[i].identifier;
+//       if (identifier in currentTouches) {
+//         /* eslint-disable-line */
+//       } else {
+//         /* eslint-disable-line */
+//       }
+//       console.log("start", e.changedTouches[i].identifier);
+//     }
+//   });
+// 
+//   canvas.addEventListener("touchmove", (e) => {
+//     e.preventDefault();
+//     analogClock.increaseViewIndex();
+//     console.log(e.changedTouches);
+//   });
+// 
+//   canvas.addEventListener("touchend", (e) => {
+//     e.preventDefault();
+//     utils.toggleFullscreen();
+//     console.log(e.changedTouches);
+//     for(let i = 0; i < e.changedTouches.length; i++ ) {
+//       console.log("end", e.changedTouches[i].identifier);
+//     }
+//   });
+// 
+
   // キー操作イベント登録
   canvas.setAttribute('tabindex', 0);
   canvas.addEventListener(
@@ -25,9 +72,6 @@ window.addEventListener("load", (e) => {
     },
     false
   );
-
-
-  
 });
 
 let currentDate = -1;

@@ -6,6 +6,7 @@ ghtml,body {
 #canvas {
     display: block;
     position: absolute;
+    background-color: blue;
     top: 0;
     left: 0;
     right: 0;
@@ -14,16 +15,16 @@ ghtml,body {
     height: 100%;
 }
 #status {
-    z-index: 255;
+    z-index: 254;
     overflow: scroll;
     background-color: magenta;
     display: block;
     position: absolute;
-    top: 5%;
-    left: 5%;
-    right: 55%;
-    bottom: 75%;
-    width: 90%;
+    top: 2%;
+    left: 52%;
+    right: 2%;
+    bottom: 2%;
+    width: 46%;
     height: 20%;
 }
 #log {
@@ -32,10 +33,10 @@ ghtml,body {
     background-color: cyan;
     display: block;
     position: absolute;
-    top: 5%;
-    left: 55%;
-    right: 5%;
-    bottom: 75%;
-    width: 90%;
+    top: 2%;
+    left: 2%;
+    right: 2%;
+    bottom: 2%;
+    width: 46%;
     height: 20%;
 }
