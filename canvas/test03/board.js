@@ -1,8 +1,8 @@
 class Board {
   constructor() {
     this.settings = {
-      FONT_SIZE: 16,
-      SCROLL_SPEED: 2,
+      FONT_SIZE: 18,
+      SCROLL_SPEED: 1,
       MASK_SIZE: 4,
       MARGIN_RATE: 1.5,
     };
@@ -42,7 +42,7 @@ class Board {
     
     const now = Date.now();
     textCtx.save();
-    textCtx.font = `${this.settings.FONT_SIZE}px "MS 明朝"`;
+    textCtx.font = `${this.settings.FONT_SIZE}px "Lucida Console", Courier, monospace`;
     textCtx.textAlign = "left";
     textCtx.textBaseline = "top";
     const text = textCtx.measureText(this.message);
@@ -51,6 +51,8 @@ class Board {
     const scrollPosition = Math.floor(-((now/speed) % scrollWidth)+tw);
 
     if (scrollPosition != this.scrollPosition) {
+
+      // Draw text
       textCtx.clearRect(0, 0, tw, th);
       textCtx.fillStyle = 'rgb(243, 152, 0)';
       textCtx.fillText(this.message,
@@ -102,8 +104,7 @@ function anim() {
   const sec = date.getSeconds().toFixed().padStart(2, '0');
   const min = date.getMinutes().toFixed().padStart(2, '0');
   const hour = date.getHours().toFixed().padStart(2, '0');
-
-  //board.message = `${hour}時 ${min}分 ${sec}秒`;
+  board.message = `${hour}時 ${min}分 ${sec}秒`;
 
   
   board.anim();
