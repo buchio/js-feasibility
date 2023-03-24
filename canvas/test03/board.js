@@ -1,11 +1,19 @@
 class Board {
-  constructor() {
+  constructor(settings = {}) {
     this.settings = {
-      FONT_SIZE: 18,
+      FONT_SIZE: 16,
+      FONT_COLOR: "#eb0",
       SCROLL_SPEED: 1,
-      MASK_SIZE: 4,
-      MARGIN_RATE: 1.5,
+      MASK_SIZE_RATIO: 8,
+      MASK_LED_RADIUS_RATE: .4,
+      RATE_MARGIN: 1.5,
+      RATE_POSITION: .25,
     };
+    for (let key in this.settings) {
+      if (key in settings) {
+        this.settings[key] = settings[key];
+      }
+    }
     this.message = null;
   }
 
@@ -22,11 +30,11 @@ class Board {
     const textCanvas = this.textCanvas;
     const maskCanvas = this.maskCanvas;
 
-    const th = Math.round(this.settings.FONT_SIZE * this.settings.MARGIN_RATE);
+    const th = Math.round(this.settings.FONT_SIZE * this.settings.RATE_MARGIN);
     const tr = textCanvas.clientWidth / textCanvas.clientHeight;
     const tw = Math.round(th * tr);
-    const mw = tw * this.settings.MASK_SIZE;
-    const mh = th * this.settings.MASK_SIZE;
+    const mw = tw * this.settings.MASK_SIZE_RATIO;
+    const mh = th * this.settings.MASK_SIZE_RATIO;
 
     if ( textCanvas.width != tw ||
          textCanvas.height != th ||
@@ -54,60 +62,80 @@ class Board {
 
       // Draw text
       textCtx.clearRect(0, 0, tw, th);
-      textCtx.fillStyle = 'rgb(243, 152, 0)';
+      textCtx.fillStyle = this.settings.FONT_COLOR;
       textCtx.fillText(this.message,
                        scrollPosition,
-                       Math.round(th*(this.settings.MARGIN_RATE-1)/2));
+                       Math.round(th*this.settings.RATE_POSITION));
       
-      // Draw mask
-      const maskCtx = maskCanvas.getContext("2d");
-      const d = mh / textCanvas.height;
-      maskCtx.clearRect(0, 0, mw, mh);
+      if (this.scrollPosition == null) {
+        console.log('Draw mask!');
+        // Draw mask
+        const maskCtx = maskCanvas.getContext("2d");
+        const d = mh / textCanvas.height;
+        const r = d*this.settings.MASK_LED_RADIUS_RATE;
+        const a = Math.PI * 2;
 
-      maskCtx.save();
-      maskCtx.lineWidth = 0.4;
-      maskCtx.strokeStyle = "#333";
-      for (let x = 0; x < mw; x+=d ) {
-        maskCtx.beginPath();
-        maskCtx.moveTo(x, 0);
-        maskCtx.lineTo(x, mh);
-        maskCtx.stroke();
+        maskCtx.clearRect(0, 0, mw, mh);
+        maskCtx.save();
+        for (let x = 0; x < mw; x+=d ) {
+          const ix = x+d/2;
+          for (let y = 0; y < mh; y+=d ) {
+            const iy = y+d/2;
+            maskCtx.fillStyle = "#111f";
+            maskCtx.fillRect(x, y, d, d);
+            maskCtx.fillStyle = "#fff";
+            maskCtx.globalCompositeOperation = "destination-out";
+            maskCtx.beginPath();
+            maskCtx.arc(ix, iy, r, 0, a, true);
+            maskCtx.fill();
+            maskCtx.fillStyle = "#0000";
+            maskCtx.globalCompositeOperation = "source-over";
+            maskCtx.beginPath();
+            maskCtx.arc(ix, iy, r, 0, a, true);
+            maskCtx.fill();
+          }
+        }
+        maskCtx.restore();
       }
-      for (let y = 0; y < mh; y+=d ) {
-        maskCtx.beginPath();
-        maskCtx.moveTo(0, y);
-        maskCtx.lineTo(mw, y);
-        maskCtx.stroke();
-      }
-      maskCtx.restore();
       this.scrollPosition = scrollPosition;
     }
     textCtx.restore();
   }
 };
 
-board = new Board();
+const board = new Board({
+  FONT_SIZE: 16,
+  SCROLL_SPEED: 2
+});
+
+const board2 = new Board({
+  FONT_SIZE: 12,
+  MASK_SIZE_RATIO: 10,
+  FONT_COLOR: "#f0f",
+  SCROLL_SPEED: 4
+});
 
 function init() {
   board.init(document.getElementById('text'),
              document.getElementById('mask'));
-
-
-  board.message = "次は渋谷　渋谷　お出口は左側です。東急東横線・東急田園都市線・京王井の頭線・地下鉄銀座線・地下鉄半蔵門線・地下鉄副都心線はお乗り換えです。電車とホームの間が開いているところがありますので足元にご注意ください The next station is しぶや. The doors on the left side will open. Please change here for the Tokyu Toyoko line, the Tokyu Den-entoshi line, the Keio Inokashira line, the Ginza subway line, the Hanzomon subway line, and the Fukutoshin subway line. Please watch your step when you leave the train. "
-.padStart(2, '0')
+  board2.init(document.getElementById('text2'),
+             document.getElementById('mask2'));
+  board2.message = "メッセージを表示します。";
   anim();
 }
-  
+
+const dateTimeFormat = new Intl.DateTimeFormat(
+  'ja-JP-u-ca-japanese', {
+    dateStyle: "full",
+    timeStyle: "full"
+  });
+
 function anim() {
 
   const date = new Date();
-  const sec = date.getSeconds().toFixed().padStart(2, '0');
-  const min = date.getMinutes().toFixed().padStart(2, '0');
-  const hour = date.getHours().toFixed().padStart(2, '0');
-  board.message = `${hour}時 ${min}分 ${sec}秒`;
-
-  
+  board.message = dateTimeFormat.format(date);
   board.anim();
+  board2.anim();
   window.requestAnimationFrame(anim);
 }
 
