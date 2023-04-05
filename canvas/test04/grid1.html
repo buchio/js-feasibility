@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+  <head>
+      <style type="text/css">
+       body {
+           overflow: hidden;
+       }
+       .wrapper {
+           width: 100%;
+           height: 98vh;
+           display: grid;
+           grid-template-columns: repeat(4, 1fr);
+           gap: 5px;
+           grid-template-rows: repeat(4, 1fr);
+       }
+       .wrapper > div {
+           overflow: hidden;
+           border: 2px solid rgb(233,171,88);
+           border-radius: 5px;
+           background-color: rgba(233,171,88,.5);
+           padding: 1em;
+           color: #d9480f;
+       }
+       #one {
+           grid-column: 1;
+           grid-row: 1;
+       }
+       #two {
+           grid-column: 2;
+           grid-row: 2;
+       }
+       #three {
+           grid-column: 3;
+           grid-row: 3;
+       }
+       #four {
+           grid-column: 4;
+           grid-row: 4;
+       }
+       #five {
+           grid-column: 2;
+           grid-row: 3;
+       }
+       #six {
+           grid-column: 4;
+           grid-row: 3;
+       }
+      </style>
+    <script type="application/javascript">
+     function anim() {
+         console.log('anim');
+         window.requestAnimationFrame(anim);
+     }
+     function resize() {
+         console.log('resize');
+         const one = document.getElementById('one');
+         console.log(one);
+
+     }
+     function onLoad() {
+         console.log('onLoad');
+         resize();
+         window.addEventListener('resize', resize);
+     }
+    </script>
+
+    <meta charset="utf-8"/>
+    <title>TEST04</title>
+  </head>
+  <body onload="onLoad();">
+      <div class="wrapper">
+          <div id="one">One</div>
+          <div id="two">
+              <div style="background-color: blue; overflow: scroll; width: 100%; height:100%; overflow-x: hidden;" >
+                  Long
+                  Long is an adjective or an adverb. …
+                  Measurements
+                  We use the nouns length, width, depth and height and the adjectives long, wide, deep and high to talk about area and size: …
+                  Area: length, width, depth and height
+                  We use the nouns length, width, depth and height and the adjectives long, wide, deep and high to talk about area and size: …
+                  Weight and volume
+                  We use the verb weigh to measure weight: …
+                  Frequency, speed, time
+                  We use many different expressions to describe frequency, speed and time. Here are some of them: …
+                  No longer, not any longer
+                  We use no longer or not any longer to talk about the end of an action or state. No longer is more formal: …
+              </div>
+
+          </div>
+          <div id="three">Three</div>
+          <div id="four">Four</div>
+          <div id="five">Five</div>
+          <div id="six">Six</div>
+      </div><html>
+  </body>
+</html>

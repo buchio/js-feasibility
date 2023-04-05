@@ -62,10 +62,13 @@ class Board {
 
       // Draw text
       textCtx.clearRect(0, 0, tw, th);
+      textCtx.save();
+      textCtx.filter = "contrast(1)";
       textCtx.fillStyle = this.settings.FONT_COLOR;
       textCtx.fillText(this.message,
                        scrollPosition,
                        Math.round(th*this.settings.RATE_POSITION));
+      textCtx.restore();
       
       if (this.scrollPosition == null) {
         console.log('Draw mask!');
@@ -105,14 +108,14 @@ class Board {
 
 const board = new Board({
   FONT_SIZE: 16,
-  SCROLL_SPEED: 2
+  SCROLL_SPEED: .2
 });
 
 const board2 = new Board({
   FONT_SIZE: 12,
   MASK_SIZE_RATIO: 10,
   FONT_COLOR: "#f0f",
-  SCROLL_SPEED: 4
+  SCROLL_SPEED: .4
 });
 
 function init() {
