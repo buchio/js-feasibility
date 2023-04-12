@@ -9,7 +9,8 @@
              margin: 0;
          }
 
-         #text, #mask {
+         #board1 {
+             background-color: red;
              display: block;
              position: absolute;
              top: 0%;
@@ -20,18 +21,8 @@
              height: 40%;
          }
 
-         #text {
-             z-index: 1;
-             background-color: black;
-             image-rendering: pixelated;
-         }
-
-         #mask {
-             z-index: 2;
-             background-color: #0000;
-         }
-
-         #text2, #mask2 {
+         #board2 {
+             background-color: blue;
              display: block;
              position: absolute;
              top: 50%;
@@ -41,26 +32,12 @@
              width: 100%;
              height: 40%;
          }
-
-         #text2 {
-             z-index: 3;
-             background-color: black;
-             image-rendering: pixelated;
-         }
-
-         #mask2 {
-             z-index: 4;
-             background-color: #0000;
-         }
         </style>
         <meta charset="utf-8"/>
-        <script src="news-contents.json"></script>
         <script src="board.js"></script>
     </head>
     <body onload="onLoad();">
-        <canvas id="text"></canvas>
-        <canvas id="mask"></canvas>
-        <canvas id="text2"></canvas>
-        <canvas id="mask2"></canvas>
+        <div id="board1"></div>
+        <div id="board2"></div>
     </body>
 </html>
