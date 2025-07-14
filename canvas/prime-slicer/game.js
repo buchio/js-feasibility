@@ -11,6 +11,14 @@ const maxMisses = 100;
 let circles = [];
 let gameOver = false;
 
+// Get references to UI elements
+const spawnRateSlider = document.getElementById('spawnRate');
+const initialVelocitySlider = document.getElementById('initialVelocity');
+
+// Initial values from sliders
+let currentSpawnRate = spawnRateSlider.value / 100; // Convert to probability (e.g., 5 -> 0.05)
+let currentInitialVelocity = parseInt(initialVelocitySlider.value);
+
 function gameLoop() {
   if (gameOver) {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -24,7 +32,7 @@ function gameLoop() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (Math.random() < 0.1) {
+  if (Math.random() < currentSpawnRate) {
     spawnCircle();
   }
 
@@ -90,7 +98,7 @@ function spawnCircle(x, y, number, vx, vy) {
   const startX = x || Math.random() * (canvas.width - radius * 2) + radius;
   const startY = y || canvas.height + radius;
   const startVX = vx || (Math.random() * 2 - 1);
-  const startVY = vy || -12 - Math.random() * 6;
+  const startVY = vy || -currentInitialVelocity - Math.random() * (currentInitialVelocity / 2);
   circles.push(new Circle(startX, startY, radius, num, startVX, startVY));
 }
 
@@ -117,14 +125,23 @@ canvas.addEventListener('mousemove', (e) => {
         if (factors) {
           const [factor1, factor2] = factors;
           // Spawn two new circles from the split
-          spawnCircle(circle.x, circle.y, factor1, -2, -8);
-          spawnCircle(circle.x, circle.y, factor2, 2, -8);
+          spawnCircle(circle.x, circle.y, factor1, -2, -currentInitialVelocity / 2);
+          spawnCircle(circle.x, circle.y, factor2, 2, -currentInitialVelocity / 2);
           score += circle.number;
         }
         circles.splice(i, 1);
       }
     }
   }
+});
+
+// Event listeners for sliders
+spawnRateSlider.addEventListener('input', (e) => {
+  currentSpawnRate = e.target.value / 100;
+});
+
+initialVelocitySlider.addEventListener('input', (e) => {
+  currentInitialVelocity = parseInt(e.target.value);
 });
 
 gameLoop();

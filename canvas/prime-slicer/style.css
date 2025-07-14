@@ -6,4 +6,14 @@ body {
 canvas {
   background-color: #fff;
   border: 1px solid #000;
+  display: block;
+  margin: 0 auto;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+.controls label {
+  margin: 0 10px;
 }
